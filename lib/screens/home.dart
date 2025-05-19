@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:todo_app/constants/color.dart';
+import 'package:todo_app/constants/tasktype.dart';
 import 'package:todo_app/headitem.dart';
-import 'package:todo_app/main.dart';
+
+import 'package:todo_app/model/task.dart';
 import 'package:todo_app/screens/add_new_task.dart';
 import 'package:todo_app/todoitem.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,18 +16,62 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //List<String> todo = ["Study Lessons", "Run 5K", "Go to party"];
+  //List<String> completed = ["Game meetup", "Take out tash"];
+
+  List<Task> todo = [
+    Task(
+      type: Tasktype.notes,
+      title: "Study Lessons",
+      description: "Study COMP117",
+      isCompleted: false,
+    ),
+    Task(
+      type: Tasktype.calendar,
+      title: "Go to party",
+      description: "Attent to party",
+      isCompleted: false,
+    ),
+    Task(
+      type: Tasktype.contest,
+      title: "Run 5k",
+      description: "Run 5k kilometers",
+      isCompleted: false,
+    ),
+  ];
+
+void addNewTask(Task newTask){
+ setState(() {
+    todo.add(newTask);
+ });
+}
+
+  List<Task> completed = [
+    Task(
+      type: Tasktype.calendar,
+      title: "Go to party",
+      description: "Attend to pary",
+      isCompleted: false,
+    ),
+    Task(
+      type: Tasktype.contest,
+      title: "Run 5k",
+      description: "Run 5k kilometers",
+      isCompleted: false,
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // üstte yazan debug yazısını kaldırdık
-    home: SafeArea(
+      home: SafeArea(
         // bildirimleri ve aşağıdaki butonları atlamamıza yaradı scaffolddan farklı olarak
         child: Scaffold(
           backgroundColor: HexColor(backgrounColor),
           body: Column(
             children: [
               // Header
-            Headitem(),
+              Headitem(),
               // Top column
               Expanded(
                 // flexible // kullanırsak
@@ -39,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       itemCount: todo.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return TodoItem(title: todo[index]);
+                        return TodoItem(task: todo[index]);
                       },
                     ),
                   ),
@@ -61,32 +106,34 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: SingleChildScrollView(  
-                  child: ListView.builder(
-                    primary: false,
-                    shrinkWrap: true,
-                    itemCount: completed.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return TodoItem(title: completed[index]);
-                    },
-                  ),
+                  child: SingleChildScrollView(
+                    child: ListView.builder(
+                      primary: false,
+                      shrinkWrap: true,
+                      itemCount: completed.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return TodoItem(task: completed[index]);
+                      },
+                    ),
                   ),
                 ),
               ),
 
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push( // yeni sayfaya yönlendirme işlemi yaptım
-                MaterialPageRoute(builder: (context) =>  AddNewTaskScreen(),
-                ));
-              }, 
-            child: const Text("Add New Task"),
+                  Navigator.of(context).push(
+                    // yeni sayfaya yönlendirme işlemi yaptım
+                    MaterialPageRoute(builder: (context) => AddNewTaskScreen(
+                      addNewTask: (newTask) => addNewTask(newTask),
+                    )),
+                  );
+                },
+                child: const Text("Add New Task"),
               ),
             ],
           ),
         ),
       ),
-     
     );
   }
 }

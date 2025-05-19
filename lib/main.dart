@@ -13,8 +13,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-List<String> todo = ["Study Lessons", "Run 5K", "Go to party"];
-List<String> completed = ["Game meetup", "Take out tash"];
+
 
 class _MyAppState extends State<MyApp> {
   bool isChecked = false;
