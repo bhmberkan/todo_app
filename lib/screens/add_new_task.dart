@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart';
 import 'package:todo_app/constants/color.dart';
 import 'package:todo_app/constants/tasktype.dart';
 import 'package:todo_app/model/task.dart';
-
+import 'package:todo_app/model/todo.dart';
+import 'package:todo_app/service/todo_service.dart';
 
 class AddNewTaskScreen extends StatefulWidget {
   const AddNewTaskScreen({super.key, required this.addNewTask});
   final void Function(Task newTask) addNewTask;
-// Passing function as parameter
+  // Passing function as parameter
 
   @override
   State<AddNewTaskScreen> createState() => _AddNewTaskScreenState();
 }
 
 class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
+  TextEditingController titleController = TextEditingController();
+  // text edit içerisinde yazdıklarımız almamıza olanak tanır //textfield
+  TextEditingController userIdController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
-TextEditingController titleController = TextEditingController(); 
-// text edit içerisinde yazdıklarımız almamıza olanak tanır //textfield
-TextEditingController dateController = TextEditingController();
-TextEditingController timeController = TextEditingController();
-TextEditingController descriptionController = TextEditingController();
-
-Tasktype tasktype = Tasktype.notes;
+  TodoService todoService = TodoService();
+  Tasktype tasktype = Tasktype.notes;
 
   @override
   Widget build(BuildContext context) {
@@ -31,48 +33,57 @@ Tasktype tasktype = Tasktype.notes;
     return SafeArea(
       child: Scaffold(
         backgroundColor: HexColor(backgrounColor),
-       // appBar: AppBar(), // oto olarak yaptığı tasarımı atıyor
+        // appBar: AppBar(), // oto olarak yaptığı tasarımı atıyor
         body: SingleChildScrollView(
           child: Column(
             children: [
               Container(
                 width: deviceWidht,
-                height: deviceHeight/10,
+                height: deviceHeight / 10,
                 decoration: BoxDecoration(
                   color: Colors.amber,
-                  image: DecorationImage(image: AssetImage("lib/assets/images/add_new_task_header.png"),
-                  fit: BoxFit.cover // arka palana tam otursun diye boşlukları doldurdum
+                  image: DecorationImage(
+                    image: AssetImage(
+                      "lib/assets/images/add_new_task_header.png",
+                    ),
+                    fit:
+                        BoxFit
+                            .cover, // arka palana tam otursun diye boşlukları doldurdum
                   ),
                 ),
                 child: Row(
                   children: [
-                    IconButton(onPressed: () {
-                      Navigator.of(context).pop();
-                    }, icon: Icon(
-                      Icons.close,
-                      size: 40,
-                      color: Colors.white,
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(Icons.close, size: 40, color: Colors.white),
                     ),
+                    Expanded(
+                      child: Text(
+                        "Add New Task",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 21,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    Expanded(child: Text(
-                      "Add New Task",
-                      style: TextStyle(color: Colors.white,
-                      fontWeight: FontWeight.bold, 
-                      fontSize: 21),
-                      textAlign: TextAlign.center,))
                   ],
-                ), 
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10),
-                child: Text("Task Title")),
+                child: Text("Task Title"),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: TextField(
                   controller: titleController,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white
+                    fillColor: Colors.white,
                   ),
                 ),
               ),
@@ -82,12 +93,14 @@ Tasktype tasktype = Tasktype.notes;
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text("category"),
-                    GestureDetector(// dokunuşları kontrol etmek için
+                    GestureDetector(
+                      // dokunuşları kontrol etmek için
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: Duration(microseconds: 500),
-                            content: Text("Category Selected"))
+                            content: Text("Category Selected"),
+                          ),
                         );
                         setState(() {
                           tasktype = Tasktype.notes;
@@ -95,12 +108,14 @@ Tasktype tasktype = Tasktype.notes;
                       },
                       child: Image.asset("lib/assets/images/category1.png"),
                     ),
-                     GestureDetector(// dokunuşları kontrol etmek için
+                    GestureDetector(
+                      // dokunuşları kontrol etmek için
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: Duration(microseconds: 500),
-                            content: Text("Category Selected"))
+                            content: Text("Category Selected"),
+                          ),
                         );
                         setState(() {
                           tasktype = Tasktype.calendar;
@@ -108,12 +123,14 @@ Tasktype tasktype = Tasktype.notes;
                       },
                       child: Image.asset("lib/assets/images/category2.png"),
                     ),
-                     GestureDetector(// dokunuşları kontrol etmek için
+                    GestureDetector(
+                      // dokunuşları kontrol etmek için
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: Duration(microseconds: 500),
-                            content: Text("Category Selected"))
+                            content: Text("Category Selected"),
+                          ),
                         );
                         setState(() {
                           tasktype = Tasktype.contest;
@@ -131,16 +148,17 @@ Tasktype tasktype = Tasktype.notes;
                     Expanded(
                       child: Column(
                         children: [
-                          Text("Date"),
+                          Text("User Id"),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: TextField(
-                              controller: dateController,
+                              controller: userIdController,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
                               ),
-                            )),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -156,7 +174,8 @@ Tasktype tasktype = Tasktype.notes;
                                 filled: true,
                                 fillColor: Colors.white,
                               ),
-                            )),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -165,45 +184,62 @@ Tasktype tasktype = Tasktype.notes;
               ),
               Row(
                 children: [
-                  Expanded(child: 
-                  Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Text("Note")),
-                     SizedBox(
-                      height: 300,
-                       child: TextField(
-                        controller: descriptionController,
-                        expands: true,
-                        maxLines: null,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                isDense: true,
-                              ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text("Note"),
+                        ),
+                        SizedBox(
+                          height: 300,
+                          child: TextField(
+                            controller: descriptionController,
+                            expands: true,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              isDense: true,
                             ),
-                     ),
-                    ],
-                  )
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
 
-              ElevatedButton(onPressed: () {
-                 Task newTask = Task(
-                  type: tasktype,
-                  title: titleController.text,
-                  description: descriptionController.text,
-                  isCompleted: false
+              ElevatedButton(
+                onPressed: () {
+                  saveTodo();
+                /*   Task newTask = Task(
+                    type: tasktype,
+                    title: titleController.text,
+                    description: descriptionController.text,
+                    isCompleted: false,
                   );
-                  widget.addNewTask(newTask);
+                  widget.addNewTask(newTask);*/
                   Navigator.pop(context);
-              }, child: Text("Save"))
+                },
+                child: Text("Save"),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void saveTodo() {
+    Todo newTodo = Todo(
+      id: -1,
+      todo: titleController.text,
+      completed: false,
+      userId: int.parse(userIdController.text),
+    );
+
+    
+    todoService.addTodo(newTodo);
   }
 }

@@ -28,6 +28,7 @@ class _TodoItemState extends State<TodoItem> {
                 ? Image.asset("lib/assets/images/category2.png")
                 : Image.asset("lib/assets/images/category3.png"),
                 */
+                Image.asset("lib/assets/images/category1.png"),
             // Icon(Icons.notes_outlined, size: 50),
             Expanded(
               child: Column(
