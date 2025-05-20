@@ -6,6 +6,7 @@ import 'package:todo_app/headitem.dart';
 
 import 'package:todo_app/model/task.dart';
 import 'package:todo_app/screens/add_new_task.dart';
+import 'package:todo_app/service/todo_service.dart';
 import 'package:todo_app/todoitem.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -62,6 +63,7 @@ void addNewTask(Task newTask){
   ];
   @override
   Widget build(BuildContext context) {
+    TodoService todoService = TodoService();
     return MaterialApp(
       debugShowCheckedModeBanner: false, // üstte yazan debug yazısını kaldırdık
       home: SafeArea(
@@ -79,13 +81,31 @@ void addNewTask(Task newTask){
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: SingleChildScrollView(
-                    child: ListView.builder(
+                    child: FutureBuilder(
+                      future: todoService.getUncompletedTodos(),
+                      builder: (context, snapshot) {
+                        print(snapshot.data);
+                        if (!snapshot.hasData) {
+                          return const CircularProgressIndicator();
+                        }
+                        else if(snapshot.data!.isEmpty){
+                          return const Text("Gösterilecek veri yok");
+                        }
+                        else{
+                      return ListView.builder(
                       primary: false,
                       shrinkWrap: true,
-                      itemCount: todo.length,
+                      itemCount: snapshot.data!.length, // ünlem içerisinde data varsa anlamı taşır.
                       itemBuilder: (BuildContext context, int index) {
-                        return TodoItem(task: todo[index]);
+                        return TodoItem(
+                          task: snapshot.data![index],
+                          );
                       },
+                    );
+                        }
+
+                    
+                    },
                     ),
                   ),
                 ),
@@ -103,22 +123,41 @@ void addNewTask(Task newTask){
               ),
               // DYR --> Don't Repeat yourself kuralına uymaz. düzelteceğim
               // Bottom column
+              
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: SingleChildScrollView(
-                    child: ListView.builder(
+                    child: FutureBuilder(
+                      future: todoService.getcompletedTodos(),
+                      builder: (context, snapshot) {
+                        print(snapshot.data);
+                        if (!snapshot.hasData) {
+                          return const CircularProgressIndicator();
+                        }
+                        else if(snapshot.data!.isEmpty){
+                          return const Text("Gösterilecek veri yok");
+                        }
+                        else{
+                      return ListView.builder(
                       primary: false,
                       shrinkWrap: true,
-                      itemCount: completed.length,
+                      itemCount: snapshot.data!.length, // ünlem içerisinde data varsa anlamı taşır.
                       itemBuilder: (BuildContext context, int index) {
-                        return TodoItem(task: completed[index]);
+                        return TodoItem(
+                          task: snapshot.data![index],
+                          );
                       },
+                    );
+                        }
+
+                    
+                    },
                     ),
                   ),
                 ),
               ),
-
+              
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
