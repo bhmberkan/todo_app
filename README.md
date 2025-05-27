@@ -3,7 +3,7 @@
 Bu proje, Flutter kullanılarak geliştirilmiş basit bir yapılacaklar listesi (To-Do) uygulamasıdır. Kullanıcılar görev ekleyebilir, tamamladıkları görevleri işaretleyebilir ve silebilirler. Uygulama, Flutter öğrenme sürecini desteklemek amacıyla geliştirilmiştir.
 - **https://dummyjson.com/**
 - **https://dummyjson.com/docs/todos** Bu adreste bulunan apiye istek gönderdim. Ancak post işlemlerini kabul etdilmediği için ilgili kısımın resmini ekledim. <br>
--**https://pub.dev/** Dart diline ait olan paketlere bu adresi kullanarak ulaştım.
+- **https://pub.dev/** Dart diline ait olan paketlere bu adresi kullanarak ulaştım.
 - **https://www.pexels.com/tr-tr/** proede bulunan ilgili fotoğrafları bu adresten buldum.
 
 
